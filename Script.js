@@ -6,7 +6,6 @@ const form = document.getElementById("mainForm");
 const mainDiv = document.getElementById("mainDiv");
 addButton.addEventListener("click", addBook);
 
-
 function book(_title, _author, _pages, _hasRead, _index){
     self = this;
     this.title = _title || "unknown";
@@ -35,6 +34,7 @@ function book(_title, _author, _pages, _hasRead, _index){
         let rawCard = this.toCard();
         for(let x = 0; x<4; x++){
             ps[x]= document.createElement('p');
+            ps[x].classList.add("bookCard");
             ps[x].innerText = rawCard[x];
             this.card.append(ps[x]);
             }
@@ -44,10 +44,8 @@ function book(_title, _author, _pages, _hasRead, _index){
         this.buttonLogic(this.deleteButton, this.toggleButton);
     }
     this.buttonAppender()
-
-
-
 }
+
 book.prototype.readToggle = function(e){
     e.preventDefault()
     this.hasRead = !this.hasRead;
@@ -55,19 +53,11 @@ book.prototype.readToggle = function(e){
 
 book.prototype.buttonLogic = function(deleteButton, toggleButton){
     deleteButton.addEventListener("click", () => {
-        
-
-        localStorage.removeItem(`myLib[${this.index}]`);
-        localStorage.removeItem(`myLib[${this.index}].title`);
-        localStorage.removeItem(`myLib[${this.index}].author`);
-        localStorage.removeItem(`myLib[${this.index}].pages`);
-        localStorage.removeItem(`myLib[${this.index}].hasRead`);
-        localStorage.removeItem(`myLib[${this.index}].index`);
-        localStorage.setItem("counter",(localStorage.getItem("counter")-1));
 
         mainDiv.removeChild(this.card);
         myLib.splice(this.index, 1);  
         counter--;
+        storeLocally();
         refresh();
         });
     toggleButton.addEventListener("click", () =>{
@@ -79,13 +69,18 @@ book.prototype.buttonLogic = function(deleteButton, toggleButton){
 }
 
 function addBook(){
-    let read = form.elements[3].checked;
+    for(let x = 0; x<4; x++){
+        if (form.elements[x].value == ''){
+            alert("Error: Please enter a value for all fields!");
+            return;
+        }
+    }
 
-   if (form.elements[0] == ""){form.elements[0] = undefined};
+    let read = form.elements[3].checked;
+    if (form.elements[0] == ""){form.elements[0] = undefined};
     let newBook = new book(form.elements[0].value, form.elements[1].value, form.elements[2].value, read, counter);
     myLib[counter] = (newBook);
     storeLocally();
-    
     counter++;
 }
 
@@ -99,19 +94,15 @@ function storeLocally(){
         localStorage.setItem(`myLib[${x}].index`, myLib[x].index);
     }
     localStorage.setItem(`counter`, counter);
+    localStorage.setItem("myLibrary", JSON.stringify(myLib));
 }
 
-function removeLocally(){
-
-}
 function refresh(){
     for(let x = 0; x <counter; x++){
         myLib[x].index = x; 
         console.log(x);
     }
 }
-
-
 
 function loadLocal(){
     counter = parseInt(localStorage.getItem("counter"));
@@ -123,6 +114,3 @@ function loadLocal(){
 }
 
 loadLocal();
-
-//TODO
-//Fix removal and recall logic. possibly refactor to clear up repitition.

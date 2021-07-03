@@ -35,10 +35,15 @@ div.bookCard{
     width: 200px;
 }
 .bookCard{
-    background-color: whitesmoke;
     text-align: center;
-    border-style: solid;
 }
-button.bookCard{
-    
+
+
+p.bookCard{
+    background: whitesmoke;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 6%;
+    border-width: 1px;
+    border-style: solid;
 }
