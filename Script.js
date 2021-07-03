@@ -99,8 +99,7 @@ function storeLocally(){
 
 function refresh(){
     for(let x = 0; x <counter; x++){
-        myLib[x].index = x; 
-        console.log(x);
+        myLib[x].index = x;
     }
 }
 
