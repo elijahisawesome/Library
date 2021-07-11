@@ -6,29 +6,34 @@ const form = document.getElementById("mainForm");
 const mainDiv = document.getElementById("mainDiv");
 addButton.addEventListener("click", addBook);
 
-function book(_title, _author, _pages, _hasRead, _index){
-    self = this;
-    this.title = _title || "unknown";
-    this.author = _author || "unknown";
-    this.pages = _pages || "unknown";
-    this.hasRead = _hasRead;
-    this.index = _index;
-    this.card = document.createElement('div');
-    this.deleteButton = document.createElement("button");
-    this.toggleButton = document.createElement("button");
+class book{
+    constructor(_title, _author, _pages, _hasRead, _index){
+        self = this;
+        this.title = _title || "unknown";
+        this.author = _author || "unknown";
+        this.pages = _pages || "unknown";
+        this.hasRead = _hasRead;
+        this.index = _index;
+        this.card = document.createElement('div');
+        this.deleteButton = document.createElement("button");
+        this.toggleButton = document.createElement("button");
+        this.buttonAppender();
+    }
 
-    this.hasReadLogic = function(){
-        if (this.hasRead){
+    
+
+    hasReadLogic(){
+        if (this.hasRead==true || this.hasRead ==="true"){
             return "I have read this book";
         }
         return "I have not read this book";
     }
     
-    this.toCard = function(){
+    toCard(){
         return (`${this.title.toString()},${this.author.toString()},${this.pages.toString()},${this.hasReadLogic()}`.split(","));
     }
 
-    this.buttonAppender = function(){
+    buttonAppender(){
         this.card.append(this.deleteButton, this.toggleButton);
         let ps = []
         let rawCard = this.toCard();
@@ -43,7 +48,6 @@ function book(_title, _author, _pages, _hasRead, _index){
         
         this.buttonLogic(this.deleteButton, this.toggleButton);
     }
-    this.buttonAppender()
 }
 
 book.prototype.readToggle = function(e){
@@ -69,6 +73,7 @@ book.prototype.buttonLogic = function(deleteButton, toggleButton){
 }
 
 function addBook(){
+    
     for(let x = 0; x<4; x++){
         if (form.elements[x].value == ''){
             alert("Error: Please enter a value for all fields!");
@@ -77,11 +82,10 @@ function addBook(){
     }
 
     let read = form.elements[3].checked;
-    if (form.elements[0] == ""){form.elements[0] = undefined};
     let newBook = new book(form.elements[0].value, form.elements[1].value, form.elements[2].value, read, counter);
     myLib[counter] = (newBook);
-    storeLocally();
     counter++;
+    storeLocally();
 }
 
 function storeLocally(){
@@ -94,7 +98,6 @@ function storeLocally(){
         localStorage.setItem(`myLib[${x}].index`, myLib[x].index);
     }
     localStorage.setItem(`counter`, counter);
-    localStorage.setItem("myLibrary", JSON.stringify(myLib));
 }
 
 function refresh(){
